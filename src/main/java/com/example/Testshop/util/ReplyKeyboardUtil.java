@@ -14,19 +14,19 @@ public class ReplyKeyboardUtil {
         return button;
     }
     public static ReplyKeyboardMarkup region() {
-        KeyboardButton region1 = button("Tashkent");
-        KeyboardButton region2 = button("Andijan");
-        KeyboardButton region3 = button("Bukhara");
-        KeyboardButton region4 = button("Fergana");
-        KeyboardButton region5 = button("Jizzakh");
+        KeyboardButton region1 = button("Toshkent");
+        KeyboardButton region2 = button("Andijon");
+        KeyboardButton region3 = button("Buxoro");
+        KeyboardButton region4 = button("Farg`ona");
+        KeyboardButton region5 = button("Jizzax");
         KeyboardButton region6 = button("Namangan ");
         KeyboardButton region7 = button("Navoiy ");
-        KeyboardButton region8 = button("Kashkadarya ");
-        KeyboardButton region9 = button("Samarkand  ");
-        KeyboardButton region10 = button("Syrdarya  ");
-        KeyboardButton region11 = button("Tashkent 2  ");
-        KeyboardButton region12 = button("Khorezm  ");
-        KeyboardButton region13 = button("Karakalpakstan   ");
+        KeyboardButton region8 = button("Qashqadaryo ");
+        KeyboardButton region9 = button("Samarqand  ");
+        KeyboardButton region10 = button("Sirdaryo  ");
+        KeyboardButton region11 = button("Toshkent vil  ");
+        KeyboardButton region12 = button("Xorazm  ");
+        KeyboardButton region13 = button("Qoraqalpogʻiston Res  ");
         KeyboardRow row1 = new KeyboardRow();
         row1.add(region1);
         KeyboardRow row2 = new KeyboardRow();

@@ -142,7 +142,7 @@ public class MainController {
         UserMap.savesellerStep(message.getChatId(), Status.CHECK_TIME);
         myTelegramBot.sendMessage(message.getChatId(), re);
         myTelegramBot.sendMsg(sendLocation);
-        myTelegramBot.sendMessage("Malumotlaringgiz to'gri ekanligini tasdiqlang ", message.getChatId(), InlineKeyBoardUtil.checkRegis());
+        myTelegramBot.sendMessage("Ma`lumotlaringiz to'gri ekanligini tasdiqlang ", message.getChatId(), InlineKeyBoardUtil.checkRegis());
 
     }
 
@@ -155,17 +155,17 @@ public class MainController {
         map.put("longitude", String.valueOf(longitude));
         UserMap.list.add(map);
         UserMap.savesellerStep(message.getChatId(), Status.REGIS);
-        myTelegramBot.sendMessage(message.getChatId(), "Please enter your card:");
+        myTelegramBot.sendMessage(message.getChatId(), "Plastik karta raqamingizni kiriting:");
     }
 
     private void location(Message message) {
         UserMap.savesellerStep(message.getChatId(), Status.CARD);
-        myTelegramBot.sendMessage(message.getChatId(), "Please enter your location:");
+        myTelegramBot.sendMessage(message.getChatId(), "Lokatsiyangizni yuboring:");
     }
 
     private void shopName(Long chatId) {
         UserMap.savesellerStep(chatId, Status.LOCATION);
-        myTelegramBot.sendMessage(chatId, "Please enter your shop Name:");
+        myTelegramBot.sendMessage(chatId, "Bozor va Do`koningiz nomini kiriting:");
     }
 
     private void regionSelect(Long chatId) {
