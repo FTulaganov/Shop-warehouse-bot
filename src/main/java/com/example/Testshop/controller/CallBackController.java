@@ -7,7 +7,6 @@ import com.example.Testshop.util.UserMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RestController;
 import org.telegram.telegrambots.meta.api.objects.MaybeInaccessibleMessage;
 
 
@@ -18,6 +17,8 @@ public class CallBackController {
     private TelegramBot myTelegramBot;
     @Autowired
     private SellerService sellerService;
+    @Autowired
+    private AdminController adminController;
 
     public void handle(String text, MaybeInaccessibleMessage message) {
         if (text.equals("register")) {
@@ -32,10 +33,12 @@ public class CallBackController {
         if (sellerService.getSeller(message.getChatId()) == null) {
             sellerService.saveUser(UserMap.getDTO(), message.getChatId());
             myTelegramBot.sendMessage(message.getChatId(), "malumotlaringgiz Operatorga yuborildi siz bilan tez orada bo'glanmiz");
+            adminController.menu(adminController.getAdminId());
         }
         else {
             sellerService.update(UserMap.getDTO(), message.getChatId());
             myTelegramBot.sendMessage(message.getChatId(), "malumotlaringgiz Operatorga yuborildi siz bilan tez orada bo'glanmiz");
+
         }
     }
 

@@ -6,6 +6,8 @@ import com.example.Testshop.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class SellerService {
@@ -41,5 +43,10 @@ public class SellerService {
         entity.setLocation_latitude(dto.getLatitude());
         entity.setLocation_longitude(dto.getLongitude());
         sellerRepository.save(entity);
+    }
+
+    public List<SellerEntity> getAllCheckSeller() {
+        List<SellerEntity> sellerEntities = sellerRepository.findAllByVisibleFalse();
+        return sellerEntities;
     }
 }
