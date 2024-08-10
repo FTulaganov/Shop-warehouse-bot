@@ -31,16 +31,16 @@ public class CallBackController {
     private void check(MaybeInaccessibleMessage message) {
         if (sellerService.getSeller(message.getChatId()) == null) {
             sellerService.saveUser(UserMap.getDTO(), message.getChatId());
-            myTelegramBot.sendMessage(message.getChatId(), "malumotlaringgiz Operatorga yuborildi siz bilan tez orada bo'glanmiz");
+            myTelegramBot.sendMessage(message.getChatId(), "Ma`lumotlaringgiz Operatorga yuborildi siz bilan tez orada bog`lanamiz");
         }
         else {
             sellerService.update(UserMap.getDTO(), message.getChatId());
-            myTelegramBot.sendMessage(message.getChatId(), "malumotlaringgiz Operatorga yuborildi siz bilan tez orada bo'glanmiz");
+            myTelegramBot.sendMessage(message.getChatId(), "Ma`lumotlaringgiz Operatorga yuborildi siz bilan tez orada bog`lanamiz");
         }
     }
 
     private void startRegistration(Long chatId) {
         UserMap.savesellerStep(chatId, Status.PHONE);
-        myTelegramBot.sendMessage(chatId, "Please enter your name:");
+        myTelegramBot.sendMessage(chatId, "Ismingizni kiriting:");
     }
 }
