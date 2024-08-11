@@ -57,7 +57,6 @@ public class MainController {
             sendPhotoRequest.setPhoto(new InputFile(new File("base/images/img.png")));
 
 
-            // Create inline keyboard
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
             List<InlineKeyboardButton> rowInline = new ArrayList<>();
@@ -75,52 +74,52 @@ public class MainController {
             myTelegramBot.sendMsg(sendMessage);
             myTelegramBot.sendMsg(sendMessage2);
             myTelegramBot.sendPhoto(sendPhotoRequest);
-        }
-        else if (message.getText() != null && message.getText().equals("/login")) {
+        } else if (message.getText() != null && message.getText().equals("/login")) {
             myTelegramBot.sendMessage(message.getChatId(), "Parolni kiriting :");
             UserMap.saveAdminStep(message.getChatId(), AdminStep.LOGIN);
-        }
-        else if (UserMap.getAdminStep(message.getChatId())!=null){
-            switch (UserMap.getAdminStep(message.getChatId())){
+        } else if (UserMap.getAdminStep(message.getChatId()) != null) {
+            switch (UserMap.getAdminStep(message.getChatId())) {
                 case LOGIN -> adminController.login(message);
+                case MENU -> adminController.menu(message.getChatId());
+            }
+        } else if (UserMap.getCurrentStep(message.getChatId()) != null) {
+            switch (UserMap.getCurrentStep(message.getChatId())) {
+                case REGIS -> {
+                    regis(message);
+                }
+                case NAME -> {
+                }
+                case PHONE -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("name", message.getText());
+                    UserMap.list.add(map);
+                    phoneCreate(message.getChatId());
+                }
+
+                case REGION -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("phone", String.valueOf(message.getContact().getPhoneNumber()));
+                    UserMap.list.add(map);
+                    regionSelect(message.getChatId());
+                }
+                case SHOPNAME -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("region", message.getText());
+                    UserMap.list.add(map);
+                    shopName(message.getChatId());
+                }
+                case LOCATION -> {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("shopName", message.getText());
+                    UserMap.list.add(map);
+                    location(message);
+                }
+                case CARD -> {
+                    card(message);
+                }
             }
         }
 
-        switch (UserMap.getCurrentStep(message.getChatId())) {
-            case REGIS -> {
-                regis(message);
-            }
-            case NAME -> {
-            }
-            case PHONE -> {
-                Map<String, String> map = new HashMap<>();
-                map.put("name", message.getText());
-                UserMap.list.add(map);
-                phoneCreate(message.getChatId());
-            }
-
-            case REGION -> {
-                Map<String, String> map = new HashMap<>();
-                map.put("phone", String.valueOf(message.getContact().getPhoneNumber()));
-                UserMap.list.add(map);
-                regionSelect(message.getChatId());
-            }
-            case SHOPNAME -> {
-                Map<String, String> map = new HashMap<>();
-                map.put("region", message.getText());
-                UserMap.list.add(map);
-                shopName(message.getChatId());
-            }
-            case LOCATION -> {
-                Map<String, String> map = new HashMap<>();
-                map.put("shopName", message.getText());
-                UserMap.list.add(map);
-                location(message);
-            }
-            case CARD -> {
-                card(message);
-            }
-        }
     }
 
     private void regis(Message message) {
