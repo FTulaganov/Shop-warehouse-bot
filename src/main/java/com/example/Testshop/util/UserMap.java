@@ -1,6 +1,6 @@
 package com.example.Testshop.util;
 
-import com.example.Testshop.SellerDto;
+import com.example.Testshop.dto.SellerDto;
 import com.example.Testshop.enums.AdminStep;
 import com.example.Testshop.enums.Status;
 
@@ -44,4 +44,7 @@ public class UserMap {
     }
 
 
+    public static void clearAdminStep(Long chatId) {
+
+    }
 }

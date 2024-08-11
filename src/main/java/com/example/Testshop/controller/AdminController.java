@@ -164,4 +164,8 @@ public class AdminController {
             }
         }
     }
+
+    public void menu(Long chatId) {
+
+    }
 }
