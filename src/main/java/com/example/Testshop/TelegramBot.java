@@ -25,11 +25,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot {
     final BotConfig botConfig;
 
-    public TelegramBot(BotConfig botConfig, MainController mainController, CallBackController callBackController) {
+    public TelegramBot(BotConfig botConfig, MainController mainController, CallBackController callBackController,UserRepository userRepository) {
         super(botConfig.getToken());
         this.botConfig = botConfig;
         this.mainController = mainController;
         this.callBackController = callBackController;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,8 +41,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final MainController mainController;
 
     private final CallBackController callBackController;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -72,30 +72,41 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    public Location sendMsg(SendLocation method) {
+    public Integer sendMsg(SendLocation method) {
         try {
-            return execute(method).getLocation();
+            Message sentMessage = execute(method);
+            return sentMessage.getMessageId();
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void sendMessage(long chatId, String text) {
+    public Integer sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(text);
         message.setReplyMarkup(new ForceReplyKeyboard());
 
         try {
-            execute(message);
+            Message sentMessage = execute(message);
+            return sentMessage.getMessageId();
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
+        return null;
     }
+
 
     public void sendMessage(String text, Long sendProfileId, ReplyKeyboardMarkup replyKeyboardMarkup) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(text);
+        sendMessage.setChatId(sendProfileId);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        sendMsg(sendMessage);
+    }
+    public void sendMessage(Long sendProfileId, ReplyKeyboardMarkup replyKeyboardMarkup) {
+        SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(sendProfileId);
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         sendMsg(sendMessage);

@@ -4,6 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class ReplyKeyboardUtil {
         button.setText(text);
         return button;
     }
+
     public static ReplyKeyboardMarkup region() {
         KeyboardButton region1 = button("Toshkent");
         KeyboardButton region2 = button("Andijon");
@@ -63,7 +65,8 @@ public class ReplyKeyboardUtil {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         return replyKeyboardMarkup;
     }
-    public static ReplyKeyboardMarkup phone(){
+
+    public static ReplyKeyboardMarkup phone() {
         KeyboardButton phone = button("Telefon raqamimni yuborish");
 
         KeyboardRow row1 = new KeyboardRow();
@@ -76,5 +79,69 @@ public class ReplyKeyboardUtil {
         keyboardMarkup.setKeyboard(keyboardRows);
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup menu() {
+        KeyboardButton product = button("Maxsulotlar Menusi");
+        KeyboardButton sellers = button("Sotuvchilar Menusi");
+        KeyboardButton exit = button("Exit");
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add(product);
+        row1.add(sellers);
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add(exit);
+
+        List<KeyboardRow> keyboardRows = new LinkedList<>();
+        keyboardRows.add(row1);
+        keyboardRows.add(row2);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboardRows);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup showGoodsMenu() {
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Maxsulot qo`shish ");
+        row1.add("Maxsulotni o`zgartirish");
+        row1.add("Maxsulotni o`chirish ");
+        keyboard.add(row1);
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("Maxsulotlar ro`yxati");
+        row2.add("Asosiy Menuga qaytish");
+        keyboard.add(row2);
+        ;
+
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup showSellerMenu() {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Sotuvchi qo`shish");
+        row1.add("Delete Seller");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("Passiv Sotuvchilar (min bonus %)");
+        row2.add("Aktiv Sotuvchilar (most bonus %)");
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add("Asosiy Menuga qaytish");
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row1);
+        keyboard.add(row2);
+        keyboard.add(row3);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
+
     }
 }

@@ -12,6 +12,7 @@ public class InlineKeyBoardUtil {
         button.setCallbackData(callBack);
         return button;
     }
+
     public static InlineKeyboardMarkup checkRegis() {
 
         List<InlineKeyboardButton> row = new LinkedList<>();
@@ -43,5 +44,15 @@ public class InlineKeyBoardUtil {
         return inlineKeyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup regisPhoto() {
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("Ro'yxatdan o'tish", "register");
+        row.add(button1);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
 
 }

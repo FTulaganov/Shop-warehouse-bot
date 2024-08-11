@@ -32,6 +32,9 @@ public class SellerEntity {
     private double location_longitude ;
     @Column(name = "card", columnDefinition = "text", length = 16)
     private String card;
+
+    @Column(name = "bonus_percentage")
+    private Integer bonusPercentage;
     @Column(name = "visible")
     private Boolean visible = Boolean.FALSE;
     @Column(name = "step")
