@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface SellerRepository extends JpaRepository<SellerEntity,Integer> {
     SellerEntity findByChatId(Long id);
+    List<SellerEntity> findAllByVisibleFalse();
 
     List<SellerEntity> findByBonusPercentageGreaterThanEqual(double minBonusPercentage);
 

@@ -28,5 +28,20 @@ public class InlineKeyBoardUtil {
         return inlineKeyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup chekAdmin() {
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        List<InlineKeyboardButton> row2 = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("XA ✅", "true");
+        InlineKeyboardButton button2 = InlineKeyBoardUtil.button("Yo'q ❌", "false");
+        row.add(button1);
+        row2.add(button2);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+        rowList.add(row2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
+
 
 }
