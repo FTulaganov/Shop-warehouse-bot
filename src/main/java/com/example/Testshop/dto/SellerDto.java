@@ -1,4 +1,4 @@
-package com.example.Testshop;
+package com.example.Testshop.dto;
 
 import com.example.Testshop.enums.Status;
 import lombok.Data;

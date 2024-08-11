@@ -1,10 +1,12 @@
 package com.example.Testshop.service;
 
-import com.example.Testshop.SellerDto;
+import com.example.Testshop.dto.SellerDto;
 import com.example.Testshop.entity.SellerEntity;
 import com.example.Testshop.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -42,4 +44,26 @@ public class SellerService {
         entity.setLocation_longitude(dto.getLongitude());
         sellerRepository.save(entity);
     }
+
+    // Delete Seller
+    public void deleteSeller(Long chatId) {
+        SellerEntity entity = sellerRepository.findByChatId(chatId);
+        sellerRepository.delete(entity);
+    }
+
+    // List Sellers
+    public List<SellerEntity> listSellers() {
+        return sellerRepository.findAll();
+    }
+
+    // List Sellers with at least a certain bonus percentage
+    public List<SellerEntity> listSellersWithBonusPercentage(double minBonusPercentage) {
+        return sellerRepository.findByBonusPercentageGreaterThanEqual(minBonusPercentage);
+    }
+
+    // List Sellers with the highest bonus percentage
+    public List<SellerEntity> listTopSellers(int topCount) {
+        return sellerRepository.findTopSellersByBonusPercentage(topCount);
+    }
 }
+
