@@ -1,19 +1,34 @@
 package com.example.Testshop.controller;
 
 import com.example.Testshop.TelegramBot;
+import com.example.Testshop.entity.GoodsEntity;
+import com.example.Testshop.entity.ModelEntity;
 import com.example.Testshop.entity.UserEntity;
 import com.example.Testshop.enums.AdminStep;
+import com.example.Testshop.enums.ProductStep;
+import com.example.Testshop.repository.GoodsRepository;
+import com.example.Testshop.repository.ModelRepository;
 import com.example.Testshop.repository.UserRepository;
 import com.example.Testshop.util.ReplyKeyboardUtil;
 import com.example.Testshop.util.UserMap;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Document;
+import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +40,12 @@ public class AdminController {
     private TelegramBot myTelegramBot;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private GoodsController goodsController;
+    @Autowired
+    private GoodsRepository goodsRepository;
+    @Autowired
+    private ModelRepository modelRepository;
 
     public void login(Message message) {
         List<UserEntity> userEntity = userRepository.findAll();
@@ -41,30 +62,6 @@ public class AdminController {
         List<UserEntity> userEntity = userRepository.findAll();
         userEntity.get(0).setChatId(chatId);
         userRepository.save(userEntity.get(0));
-    }
-
-    private void showMainMenu(Long chatId) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(chatId);
-        sendMessage.setText("Asosiy Menu:\n1. Maxsulotlar Menusi\n2. Sotuvchilar Menusi\n3. Exit");
-
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        List<KeyboardRow> keyboard = new ArrayList<>();
-        KeyboardRow row = new KeyboardRow();
-
-        row.add("Maxsulotlar Menusi");
-        row.add("Sotuvchilar Menusi");
-        keyboard.add(row);
-
-        row = new KeyboardRow();
-        row.add("Exit");
-        keyboard.add(row);
-
-        replyKeyboardMarkup.setKeyboard(keyboard);
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-
-        myTelegramBot.sendMsg(sendMessage);
-        UserMap.saveAdminStep(chatId, AdminStep.MAIN_MENU);
     }
 
     private void handleOwnerMenuActions(Message message) {
@@ -92,19 +89,25 @@ public class AdminController {
         String text = message.getText();
         Long id = message.getChatId();
         switch (text) {
-            case "qo`shish Maxsulotlar" -> myTelegramBot.sendMessage(id, "Maxsulotning ma`lumotlarini kiriting.");
-            case "Maxsulot ma`lumotlarini o`zgartirish" ->
-                    myTelegramBot.sendMessage(id, "Maxsulotning S/R ni kiriting.");
-            case "Maxsulotni ma`lumotlarini o`chirish" ->
-                    myTelegramBot.sendMessage(id, "Maxsulotning S/R ni kiriting.");
+            case "Maxsulot qo`shish" -> {
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.ADD_PRODUCT);
+                myTelegramBot.sendMessage("Maxsulot Excel faylini yuklang :", id, ReplyKeyboardUtil.back());
+            }
+            case "Maxsulotni o`zgartirish" -> {
+                myTelegramBot.sendMessage("Maxsulotning S/R ni kiriting.", message.getChatId(), ReplyKeyboardUtil.back());
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.EDIT_PRODUCT);
+                UserMap.saveProductStep(message.getChatId(), ProductStep.START);
+            }
+            case "Maxsulotni o`chirish" -> {
+                myTelegramBot.sendMessage(id, "Maxsulotning S/R ni kiriting.");
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.DELETE_PORDUCT);
+            }
             case "Maxsulotlar ro`yxati" -> myTelegramBot.sendMessage(id, "Maxsulotlar ro`yxati.");
             case "Asosiy Menuga qaytish" -> {
                 myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
                 UserMap.saveAdminStep(id, AdminStep.MENU);
             }
-
         }
-        myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
 
     }
 
@@ -126,4 +129,78 @@ public class AdminController {
         }
     }
 
+    public void addProduct(Message message) {
+        if (message.getText() != null && message.getText().equals("Back")) {
+            myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
+        } else {
+            Document document = message.getDocument();
+            String fileId = document.getFileId();
+
+            try {
+                GetFile getFile = new GetFile();
+                getFile.setFileId(fileId);
+                File file = myTelegramBot.sendMsg(getFile);
+
+                String filePath = "https://api.telegram.org/file/bot" + "6960550759:AAELl3_KQsCm5d9DcIOH4GpXJltupiRGDMc" + "/" + file.getFilePath();
+                InputStream inputStream = new URL(filePath).openStream();
+
+                Workbook workbook = new XSSFWorkbook(inputStream);
+                Sheet sheet = workbook.getSheetAt(0);
+
+                for (Row row : sheet) {
+                    Cell modelCell = row.getCell(0);
+                    Cell serialCell = row.getCell(1);
+
+                    if (modelCell != null && serialCell != null) {
+                        String modelName = modelCell.getStringCellValue();
+                        String serialNumber = serialCell.getStringCellValue();
+
+                        if (modelName != null && serialNumber != null) {
+                            ModelEntity model = new ModelEntity();
+                            model.setModel(modelName);
+                            modelRepository.save(model);
+
+                            Integer modelId = model.getId();
+
+                            GoodsEntity serial = new GoodsEntity();
+                            serial.setModelId(modelId);
+                            serial.setCodeItem(serialNumber);
+                            goodsRepository.save(serial);
+                        } else {
+                            System.out.println("Model name or serial number is null.");
+                        }
+                    } else {
+                        System.out.println("Excel cell is null.");
+                    }
+                }
+                workbook.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            myTelegramBot.sendMessage(message.getChatId(), "Ma'lumotlar yuklandi ");
+            myTelegramBot.sendMessage("Maxsulot Excel faylini yuklang :", message.getChatId(), ReplyKeyboardUtil.back());
+
+        }
+    }
+
+    public void editProduct(Message message) {
+        if (message.getText() != null && message.getText().equals("Back")) {
+            myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
+        } else if (UserMap.getProductStep(message.getChatId()) != null) {
+            switch (UserMap.getProductStep(message.getChatId())) {
+                case START -> goodsController.start(message);
+                case NAME -> goodsController.name(message);
+                case PRICE -> goodsController.price(message);
+                case BONUS -> goodsController.bonus(message);
+                case ALL -> goodsController.all(message);
+
+            }
+        }
+    }
+
+    public void deleteProduct(Message message) {
+        goodsController.deleteProduct(message);
+    }
 }

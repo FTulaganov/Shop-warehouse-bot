@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 @Table(name = "goods")
 public class GoodsEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code_item", unique = true, nullable = false)
     private String codeItem;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "model_id", nullable = false)
-    private ModelEntity model;
+    /*    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @JoinColumn(name = "model_id", nullable = false)
+        private ModelEntity model;*/
+    @Column(name = "model_id", unique = true, nullable = false)
+    private Integer modelId;
+
 }

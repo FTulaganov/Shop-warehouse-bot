@@ -1,6 +1,7 @@
 package com.example.Testshop.controller;
 
 import com.example.Testshop.TelegramBot;
+import com.example.Testshop.dto.SellerDto;
 import com.example.Testshop.enums.Status;
 import com.example.Testshop.repository.UserRepository;
 import com.example.Testshop.util.InlineKeyBoardUtil;
@@ -27,21 +28,21 @@ public class SellerController {
 
 
     public void regis(Message message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("card", message.getText());
-        UserMap.list.add(map);
+        SellerDto dto= UserMap.getDTO(message.getChatId());
+        dto.setCard(message.getText());
+        UserMap.list.put(message.getChatId(),dto);
 
-        List<Map<String, String>> result = UserMap.list;
-        String re = "name : " + result.get(0).get("name") +
-                "\nphone : " + result.get(1).get("phone") +
-                "\nregion : " + result.get(2).get("region") +
-                "\nshopName : " + result.get(3).get("shopName") +
-                "\ncard : " + result.get(5).get("card");
+        SellerDto result = UserMap.getDTO(message.getChatId());
+        String re = "Ism : " + result.getName() +
+                "\nTelefon : " + result.getPhone() +
+                "\nViloyat : " + result.getRegion() +
+                "\nBozor,do`kon : " + result.getShopName() +
+                "\nKarta raqami : " + result.getCard();
 
         SendLocation sendLocation = new SendLocation();
         sendLocation.setChatId(message.getChatId());
-        sendLocation.setLatitude(Double.valueOf(result.get(4).get("latitude")));
-        sendLocation.setLongitude(Double.valueOf(result.get(4).get("longitude")));
+        sendLocation.setLatitude(result.getLatitude());
+        sendLocation.setLongitude(result.getLongitude());
         UserMap.savesellerStep(message.getChatId(), Status.CHECK_TIME);
         myTelegramBot.sendMessage(message.getChatId(), re);
         myTelegramBot.sendMsg(sendLocation);
@@ -50,34 +51,34 @@ public class SellerController {
     }
 
     public void phoneCreate(Message message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("name", message.getText());
-        UserMap.list.add(map);
+        SellerDto dto= new SellerDto();
+        dto.setName(message.getText());
+        UserMap.list.put(message.getChatId(),dto);
         UserMap.savesellerStep(message.getChatId(), Status.REGION);
         myTelegramBot.sendMessage("Iltimos, telefon raqamingizni yuboring:", message.getChatId(), ReplyKeyboardUtil.phone());
     }
 
     public void regionSelect(Message message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("phone", String.valueOf(message.getContact().getPhoneNumber()));
-        UserMap.list.add(map);
+        SellerDto dto= UserMap.getDTO(message.getChatId());
+        dto.setPhone(message.getContact().getPhoneNumber());
+        UserMap.list.put(message.getChatId(),dto);
         UserMap.savesellerStep(message.getChatId(), Status.SHOPNAME);
         myTelegramBot.sendMessage("O'z viloyatingizni kiriting!", message.getChatId(), ReplyKeyboardUtil.region());
 
     }
 
     public void shopName(Message message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("region", message.getText());
-        UserMap.list.add(map);
+        SellerDto dto= UserMap.getDTO(message.getChatId());
+        dto.setRegion(message.getText());
+        UserMap.list.put(message.getChatId(),dto);
         UserMap.savesellerStep(message.getChatId(), Status.LOCATION);
         myTelegramBot.sendMessage(message.getChatId(), "Bozor va Do`koningiz nomini kiriting:");
     }
 
     public void location(Message message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("shopName", message.getText());
-        UserMap.list.add(map);
+        SellerDto dto= UserMap.getDTO(message.getChatId());
+        dto.setShopName(message.getText());
+        UserMap.list.put(message.getChatId(),dto);
         UserMap.savesellerStep(message.getChatId(), Status.CARD);
         myTelegramBot.sendMessage(message.getChatId(), "Lokatsiyangizni yuboring:");
     }
@@ -86,10 +87,10 @@ public class SellerController {
         Location location = message.getLocation();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        Map<String, String> map = new HashMap<>();
-        map.put("latitude", String.valueOf(latitude));
-        map.put("longitude", String.valueOf(longitude));
-        UserMap.list.add(map);
+        SellerDto dto= UserMap.getDTO(message.getChatId());
+        dto.setLatitude(latitude);
+        dto.setLongitude(longitude);
+        UserMap.list.put(message.getChatId(),dto);
         UserMap.savesellerStep(message.getChatId(), Status.REGIS);
         myTelegramBot.sendMessage(message.getChatId(), "Plastik karta raqamingizni kiriting:");
     }

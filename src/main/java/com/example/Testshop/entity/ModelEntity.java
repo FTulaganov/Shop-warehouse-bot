@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -16,20 +17,20 @@ public class ModelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "model", nullable = false)
     private String model;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private Double price;
 
-    @Column(name = "bonus", nullable = false)
+    @Column(name = "bonus")
     private Double bonus;
 
     @CreationTimestamp
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate = LocalDateTime.now();
 
 }

@@ -61,7 +61,7 @@ public class ExcelService {
                     .orElseGet(() -> {
                         GoodsEntity newGoods = new GoodsEntity();
                         newGoods.setCodeItem(itemCode);
-                        newGoods.setModel(modelEntity);
+                      //  newGoods.setModel(modelEntity);
                         return newGoods;
                     });
 

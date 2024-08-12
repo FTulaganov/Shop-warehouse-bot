@@ -2,9 +2,12 @@ package com.example.Testshop.service;
 
 import com.example.Testshop.dto.GoodsDto;
 import com.example.Testshop.entity.GoodsEntity;
+import com.example.Testshop.entity.ModelEntity;
 import com.example.Testshop.repository.GoodsRepository;
+import com.example.Testshop.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -12,13 +15,15 @@ import java.util.List;
 public class GoodsService {
 
     private final GoodsRepository goodsRepository;
+    private final ModelRepository modelRepository;
 
     // Save Goods
-    public GoodsEntity saveGoods(GoodsDto dto) {
-        GoodsEntity entity = new GoodsEntity();
-
-        goodsRepository.save(entity);
-        return entity;
+    public void saveGoods(GoodsDto dto) {
+        ModelEntity entity = modelRepository.findById(dto.getModel()).get();
+        entity.setName(dto.getName());
+        entity.setPrice(dto.getPrice());
+        entity.setBonus(dto.getBonus());
+        modelRepository.save(entity);
     }
 
 
@@ -37,14 +42,19 @@ public class GoodsService {
 //            entity.setPrice(dto.getPrice());
 //            entity.setBonus(dto.getBonus());
 //            entity.setCreatedDate(dto.getCreatedDate() != null ? dto.getCreatedDate() : entity.getCreatedDate());
-          goodsRepository.save(entity);
-        }
-
+        goodsRepository.save(entity);
+    }
 
 
     // Delete Goods
-    public void deleteGoods(String codeItem) {
-        goodsRepository.deleteByCodeItem(codeItem);
+    public Boolean deleteGoods(String codeItem) {
+       GoodsEntity entity =getGoods(codeItem);
+       if (entity != null){
+           goodsRepository.deleteById(codeItem);
+           modelRepository.deleteById(entity.getModelId());
+           return true;
+       }
+       return false;
     }
 
     // List all Goods

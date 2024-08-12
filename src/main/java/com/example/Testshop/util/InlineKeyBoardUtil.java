@@ -55,4 +55,18 @@ public class InlineKeyBoardUtil {
         return inlineKeyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup editProduct() {
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        List<InlineKeyboardButton> row2 = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("TO'G'RI ✅", "true");
+        InlineKeyboardButton button2 = InlineKeyBoardUtil.button("XATO ❌", "false");
+        row.add(button1);
+        row2.add(button2);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+        rowList.add(row2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
 }

@@ -115,7 +115,6 @@ public class ReplyKeyboardUtil {
         row2.add("Maxsulotlar ro`yxati");
         row2.add("Asosiy Menuga qaytish");
         keyboard.add(row2);
-        ;
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboard);
@@ -143,5 +142,16 @@ public class ReplyKeyboardUtil {
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;
 
+    }
+
+    public static ReplyKeyboardMarkup back() {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Back");
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row1);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
     }
 }

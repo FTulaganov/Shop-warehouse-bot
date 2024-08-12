@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class GoodsDto {
     private String codeItem;
     private String name;
-    private String model;
+    private Integer model;
     private Double price;
     private Double bonus;
     private LocalDateTime createdDate;
