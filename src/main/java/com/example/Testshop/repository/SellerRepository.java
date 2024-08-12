@@ -7,11 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SellerRepository extends JpaRepository<SellerEntity,Integer> {
+public interface SellerRepository extends JpaRepository<SellerEntity,Long> {
     SellerEntity findByChatId(Long id);
     List<SellerEntity> findAllByVisibleFalse();
-
     List<SellerEntity> findByBonusPercentageGreaterThanEqual(double minBonusPercentage);
 
-    List<SellerEntity> findTopSellersByBonusPercentage(int topCount);
+    List<SellerEntity> findTopSellersByBonusPercentage(double topCount);
 }

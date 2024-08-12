@@ -16,25 +16,9 @@ import java.time.LocalDateTime;
 public class GoodsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Column(name = "code_item", unique = true, nullable = false)
     private String codeItem;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "model", nullable = false)
-    private String model;
-
-    @Column(name = "price", nullable = false)
-    private Double price;
-
-    @Column(name = "bonus", nullable = false)
-    private Double bonus;
-
-    @CreationTimestamp
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "model_id", nullable = false)
+    private ModelEntity model;
 }
-

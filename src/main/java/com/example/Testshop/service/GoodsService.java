@@ -16,39 +16,35 @@ public class GoodsService {
     // Save Goods
     public GoodsEntity saveGoods(GoodsDto dto) {
         GoodsEntity entity = new GoodsEntity();
-        entity.setCodeItem(dto.getCodeItem());
-        entity.setName(dto.getName());
-        entity.setModel(dto.getModel());
-        entity.setPrice(dto.getPrice());
-        entity.setBonus(dto.getBonus());
+
         goodsRepository.save(entity);
         return entity;
     }
 
 
     // Get Goods by ID
-    public GoodsEntity getGoods(Long id) {
-        return goodsRepository.findById(Math.toIntExact(id)).orElse(null);
+    public GoodsEntity getGoods(String codeItem) {
+        return goodsRepository.findByCodeItem(codeItem).orElse(null);
     }
 
     // Update Goods
-    public void updateGoods(GoodsDto dto, Long id) {
-        GoodsEntity entity = goodsRepository.findById(Math.toIntExact(id)).orElse(null);
-        if (entity != null) {
-            entity.setCodeItem(dto.getCodeItem());
-            entity.setName(dto.getName());
-            entity.setModel(dto.getModel());
-            entity.setPrice(dto.getPrice());
-            entity.setBonus(dto.getBonus());
-            entity.setCreatedDate(dto.getCreatedDate() != null ? dto.getCreatedDate() : entity.getCreatedDate());
-            goodsRepository.save(entity);
+    public void updateGoods(GoodsDto dto, String codeItem) {
+        GoodsEntity entity = goodsRepository.findByCodeItem(codeItem).orElse(null);
+//        if (entity != null) {
+//            entity.setCodeItem(dto.getCodeItem());
+//            entity.setName(dto.getName());
+//            entity.setModel(dto.getModel());
+//            entity.setPrice(dto.getPrice());
+//            entity.setBonus(dto.getBonus());
+//            entity.setCreatedDate(dto.getCreatedDate() != null ? dto.getCreatedDate() : entity.getCreatedDate());
+          goodsRepository.save(entity);
         }
-    }
+
 
 
     // Delete Goods
-    public void deleteGoods(Long id) {
-        goodsRepository.deleteById(Math.toIntExact(id));
+    public void deleteGoods(String codeItem) {
+        goodsRepository.deleteByCodeItem(codeItem);
     }
 
     // List all Goods

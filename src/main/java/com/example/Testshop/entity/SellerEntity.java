@@ -43,4 +43,5 @@ public class SellerEntity {
     private Long chatId ;
     @Column(name = "create_date")
     private LocalDateTime createDate = LocalDateTime.now();
+
 }
