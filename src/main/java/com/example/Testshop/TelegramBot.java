@@ -3,16 +3,15 @@ package com.example.Testshop;
 import com.example.Testshop.config.BotConfig;
 import com.example.Testshop.controller.CallBackController;
 import com.example.Testshop.controller.MainController;
-import com.example.Testshop.entity.UserEntity;
-import com.example.Testshop.enums.UserRole;
 import com.example.Testshop.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.*;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ForceReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -55,7 +54,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String data = callbackQuery.getData();
                 callBackController.handle(data, callbackQuery.getMessage());
             } else {
-                System.out.println("my telegram hatto");
+                System.out.println("my telegram hato");
             }
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -85,6 +84,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
+    public void send(long chatId,ReplyKeyboardMarkup replyKeyboardMarkup){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public Integer sendMessage(long chatId, String text) {
         SendMessage message = new SendMessage();
@@ -110,12 +119,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         sendMsg(sendMessage);
     }
-    public void sendMessage(Long sendProfileId, ReplyKeyboardMarkup replyKeyboardMarkup) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(sendProfileId);
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        sendMsg(sendMessage);
-    }
 
     public Message sendMessage(String text, Long sendProfileId, InlineKeyboardMarkup inlineKeyboardMarkup) {
         SendMessage sendMessage = new SendMessage();
@@ -128,6 +131,25 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void sendPhoto(SendPhoto send) {
         try {
             execute(send);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMsg(Long chatId, InputFile excelFile) {
+        SendDocument sendDocumentRequest = new SendDocument();
+        sendDocumentRequest.setChatId(chatId);
+        sendDocumentRequest.setDocument(excelFile);
+        try {
+            execute(sendDocumentRequest);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessage(DeleteMessage deleteMessage) {
+        try {
+            execute(deleteMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

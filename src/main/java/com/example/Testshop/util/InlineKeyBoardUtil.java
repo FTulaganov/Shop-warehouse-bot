@@ -29,6 +29,22 @@ public class InlineKeyBoardUtil {
         return inlineKeyboardMarkup;
     }
 
+    public static InlineKeyboardMarkup checkRegisAdmin(Long id) {
+
+        List<InlineKeyboardButton> row = new LinkedList<>();
+        List<InlineKeyboardButton> row2 = new LinkedList<>();
+        InlineKeyboardButton button1 = InlineKeyBoardUtil.button("To'gri", String.valueOf(id));
+        InlineKeyboardButton button2 = InlineKeyBoardUtil.button("Xato", "false" + id);
+        row.add(button1);
+        row2.add(button2);
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new LinkedList<>();
+        rowList.add(row);
+        rowList.add(row2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
+
     public static InlineKeyboardMarkup chekAdmin() {
         List<InlineKeyboardButton> row = new LinkedList<>();
         List<InlineKeyboardButton> row2 = new LinkedList<>();

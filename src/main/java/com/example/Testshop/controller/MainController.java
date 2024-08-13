@@ -32,8 +32,6 @@ public class MainController {
     @Lazy
     private TelegramBot myTelegramBot;
     @Autowired
-    private SellerService sellerService;
-    @Autowired
     private AdminController adminController;
     @Autowired
     private SellerController sellerController;
@@ -42,12 +40,11 @@ public class MainController {
 
         if (message.getText() != null && message.getText().equals("/start")) {
             UserMap.savesellerStep(message.getChatId(), Status.MENU);
-            sellerController.regis(message);
+            sellerController.start(message);
         } else if (message.getText() != null && message.getText().equals("/login")) {
             myTelegramBot.sendMessage(message.getChatId(), "Parolni kiriting :");
             UserMap.saveAdminStep(message.getChatId(), AdminStep.LOGIN);
-        }
-        if (UserMap.getAdminStep(message.getChatId()) != null) {
+        } else if (UserMap.getAdminStep(message.getChatId()) != null) {
             switch (UserMap.getAdminStep(message.getChatId())) {
                 case LOGIN -> adminController.login(message);
                 case MENU -> adminController.menu(message);
@@ -55,7 +52,10 @@ public class MainController {
                 case SELLERS_MENU -> adminController.sellersMenu(message);
                 case ADD_PRODUCT -> adminController.addProduct(message);
                 case EDIT_PRODUCT -> adminController.editProduct(message);
-                case DELETE_PORDUCT -> adminController.deleteProduct(message);
+                case DELETE_PRODUCT -> adminController.deleteProduct(message);
+                case GET_PRODUCT -> adminController.getProduct(message);
+                case ADD_SELLER -> adminController.add(message);
+                case DELETE_SELLER -> adminController.deleteSeller(message);
             }
         } else if (UserMap.getCurrentStep(message.getChatId()) != null) {
             switch (UserMap.getCurrentStep(message.getChatId())) {

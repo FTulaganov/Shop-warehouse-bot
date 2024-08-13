@@ -13,4 +13,6 @@ public interface SellerRepository extends JpaRepository<SellerEntity,Long> {
     List<SellerEntity> findByBonusPercentageGreaterThanEqual(double minBonusPercentage);
 
     List<SellerEntity> findTopSellersByBonusPercentage(double topCount);
+
+    List<SellerEntity> findAllByVisibleTrue();
 }

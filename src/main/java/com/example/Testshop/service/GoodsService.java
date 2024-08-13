@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -48,18 +49,27 @@ public class GoodsService {
 
     // Delete Goods
     public Boolean deleteGoods(String codeItem) {
-       GoodsEntity entity =getGoods(codeItem);
-       if (entity != null){
-           goodsRepository.deleteById(codeItem);
-           modelRepository.deleteById(entity.getModelId());
-           return true;
-       }
-       return false;
+        GoodsEntity entity = getGoods(codeItem);
+        if (entity != null) {
+            goodsRepository.deleteById(codeItem);
+            modelRepository.deleteById(entity.getModelId());
+            return true;
+        }
+        return false;
     }
 
     // List all Goods
     public List<GoodsEntity> listGoods() {
         return goodsRepository.findAll();
+    }
+
+    public List<GoodsEntity> getAll() {
+        return goodsRepository.findAll();
+    }
+
+    public String getModel(Integer modelId) {
+        Optional<ModelEntity> model = modelRepository.findById(modelId);
+        return model.get().getModel();
     }
 }
 

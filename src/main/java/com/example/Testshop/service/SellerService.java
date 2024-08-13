@@ -65,5 +65,35 @@ public class SellerService {
     public List<SellerEntity> listTopSellers(int topCount) {
         return sellerRepository.findTopSellersByBonusPercentage(topCount);
     }
+
+    public List<SellerEntity> allSeller() {
+        return sellerRepository.findAllByVisibleFalse();
+    }
+
+    public void signIn(long id) {
+        SellerEntity entity = getSeller(id);
+        entity.setVisible(true);
+        sellerRepository.save(entity);
+    }
+
+    public Boolean getSeller(String text) {
+        List<SellerEntity> entities = sellerRepository.findAllByVisibleTrue();
+        for (SellerEntity entity : entities) {
+            String phone = entity.getPhone();
+            if (phone.startsWith("+")) {
+                if (phone.equals(text)) {
+                    sellerRepository.delete(entity);
+                    return true;
+                }
+            } else {
+                String result = text.substring(1);
+                if (result.equals(phone)) {
+                    sellerRepository.delete(entity);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 

@@ -154,4 +154,18 @@ public class ReplyKeyboardUtil {
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;
     }
+
+    public static ReplyKeyboardMarkup getProduct() {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Back");
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("Malumotlarni yuklab olish");
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        keyboard.add(row2);
+        keyboard.add(row1);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
+    }
 }
