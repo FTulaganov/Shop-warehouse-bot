@@ -24,31 +24,33 @@ public class ReplyKeyboardUtil {
         KeyboardButton region6 = button("Namangan ");
         KeyboardButton region7 = button("Navoiy ");
         KeyboardButton region8 = button("Qashqadaryo ");
-        KeyboardButton region9 = button("Samarqand  ");
-        KeyboardButton region10 = button("Sirdaryo  ");
-        KeyboardButton region11 = button("Toshkent vil  ");
-        KeyboardButton region12 = button("Xorazm  ");
-        KeyboardButton region13 = button("Qoraqalpogʻiston Res  ");
+        KeyboardButton region9 = button("Surxandaryo");
+        KeyboardButton region10 = button("Samarqand  ");
+        KeyboardButton region11 = button("Sirdaryo  ");
+        KeyboardButton region12 = button("Toshkent vil  ");
+        KeyboardButton region13 = button("Xorazm  ");
+        KeyboardButton region14 = button("Qoraqalpogʻiston Res  ");
         KeyboardRow row1 = new KeyboardRow();
         row1.add(region1);
+        row1.add(region2);
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(region2);
         row2.add(region3);
+        row2.add(region4);
         KeyboardRow row3 = new KeyboardRow();
-        row3.add(region4);
         row3.add(region5);
+        row3.add(region6);
         KeyboardRow row4 = new KeyboardRow();
-        row4.add(region6);
         row4.add(region7);
+        row4.add(region8);
         KeyboardRow row5 = new KeyboardRow();
-        row5.add(region8);
         row5.add(region9);
+        row5.add(region10);
         KeyboardRow row6 = new KeyboardRow();
-        row6.add(region10);
         row6.add(region11);
+        row6.add(region12);
         KeyboardRow row7 = new KeyboardRow();
-        row7.add(region12);
         row7.add(region13);
+        row7.add(region14);
 
         List<KeyboardRow> rowList = new LinkedList<>();
         rowList.add(row1);
@@ -84,14 +86,20 @@ public class ReplyKeyboardUtil {
     public static ReplyKeyboardMarkup menu() {
         KeyboardButton product = button("Maxsulotlar Menusi");
         KeyboardButton sellers = button("Sotuvchilar Menusi");
-        KeyboardButton exit = button("Exit");
+        KeyboardButton bonuses = button("Bonuslar Menusi");
+        KeyboardButton loginParol = button("Parolni o`zgartirish");
+        KeyboardButton exit = button("Chiqish");
 
         KeyboardRow row1 = new KeyboardRow();
         row1.add(product);
-        row1.add(sellers);
-
         KeyboardRow row2 = new KeyboardRow();
-        row2.add(exit);
+        row2.add(sellers);
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add(bonuses);
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add(loginParol);
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add(exit);
 
         List<KeyboardRow> keyboardRows = new LinkedList<>();
         keyboardRows.add(row1);
@@ -107,13 +115,15 @@ public class ReplyKeyboardUtil {
 
         KeyboardRow row1 = new KeyboardRow();
         row1.add("Maxsulot qo`shish ");
-        row1.add("Maxsulotni o`zgartirish");
-        row1.add("Maxsulotni o`chirish ");
-        keyboard.add(row1);
-
         KeyboardRow row2 = new KeyboardRow();
-        row2.add("Maxsulotlar ro`yxati");
-        row2.add("Asosiy Menuga qaytish");
+        row2.add("Maxsulotni o`zgartirish");
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add("Maxsulotni o`chirish ");
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("Maxsulotlar ro`yxati");
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add("Orqaga qaytish");
+
         keyboard.add(row2);
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
@@ -125,18 +135,21 @@ public class ReplyKeyboardUtil {
     public static ReplyKeyboardMarkup showSellerMenu() {
         KeyboardRow row1 = new KeyboardRow();
         row1.add("Sotuvchi qo`shish");
-        row1.add("Delete Seller");
-
         KeyboardRow row2 = new KeyboardRow();
-        row2.add("Passiv Sotuvchilar (min bonus %)");
-        row2.add("Aktiv Sotuvchilar (most bonus %)");
+        row2.add("Sotuvchini o`chirish");
 
         KeyboardRow row3 = new KeyboardRow();
-        row3.add("Asosiy Menuga qaytish");
+        row3.add("Passiv Sotuvchilar (min bonus %)");
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("Aktiv Sotuvchilar (most bonus %)");
+        KeyboardRow row5 = new KeyboardRow();
+        row5.add("Orqaga qaytish");
         List<KeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
+        keyboard.add(row4);
+        keyboard.add(row5);
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboard);
         keyboardMarkup.setResizeKeyboard(true);
@@ -154,6 +167,7 @@ public class ReplyKeyboardUtil {
         keyboardMarkup.setResizeKeyboard(true);
         return keyboardMarkup;
     }
+
 
     public static ReplyKeyboardMarkup getProduct() {
         KeyboardRow row1 = new KeyboardRow();
