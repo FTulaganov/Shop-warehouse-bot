@@ -2,10 +2,7 @@ package com.example.Testshop.util;
 
 import com.example.Testshop.dto.GoodsDto;
 import com.example.Testshop.dto.SellerDto;
-import com.example.Testshop.enums.AdminStep;
-import com.example.Testshop.enums.ProductStep;
-import com.example.Testshop.enums.Status;
-import com.example.Testshop.enums.UserRole;
+import com.example.Testshop.enums.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -65,7 +62,8 @@ public class UserMap {
     /// chat
 
     public static Map<Long, List<Integer>> chatIdList = new HashMap<>();
-    public static List<Integer> getChatIdList(Long id){
+
+    public static List<Integer> getChatIdList(Long id) {
         return chatIdList.get(id);
     }
 
@@ -78,4 +76,22 @@ public class UserMap {
     }
 
     private static Map<Long, UserRole> role = new HashMap<>();
+
+    /// password check
+    public static Map<Long, Boolean> checkpasword = new HashMap<>();
+
+    /// bonus
+    public static Map<Long, Bonus> bonusList = new HashMap<>();
+
+    public static void saveBonusStep(Long id, Bonus bonus) {
+        bonusList.put(id, bonus);
+    }
+
+    public static Bonus getBonus(Long id) {
+        return bonusList.get(id);
+    }
+
+    public static List<Integer> bonus = new LinkedList<>();
+    public static List<String> bonus_price = new LinkedList<>();
+
 }

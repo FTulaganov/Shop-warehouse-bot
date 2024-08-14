@@ -7,6 +7,7 @@ import com.example.Testshop.entity.ModelEntity;
 import com.example.Testshop.entity.SellerEntity;
 import com.example.Testshop.entity.UserEntity;
 import com.example.Testshop.enums.AdminStep;
+import com.example.Testshop.enums.Bonus;
 import com.example.Testshop.enums.ProductStep;
 import com.example.Testshop.enums.Status;
 import com.example.Testshop.repository.GoodsRepository;
@@ -28,6 +29,7 @@ import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.Document;
 import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -65,6 +67,10 @@ public class AdminController {
         List<UserEntity> userEntity = userRepository.findAll();
         if (message.getText().equals(userEntity.get(0).getPassword())) {
             UserMap.saveAdminStep(message.getChatId(), AdminStep.MENU);
+            DeleteMessage deleteMessage = new DeleteMessage();
+            deleteMessage.setChatId(message.getChatId());
+            deleteMessage.setMessageId(message.getMessageId());
+            myTelegramBot.sendMessage(deleteMessage);
             updateAdmin(message.getChatId());
             myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
         } else {
@@ -89,6 +95,12 @@ public class AdminController {
         } else if (text.equals("Sotuvchilar Menusi")) {
             myTelegramBot.sendMessage("Sotuvchilar Menusi:", message.getChatId(), ReplyKeyboardUtil.showSellerMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.SELLERS_MENU);
+        } else if (text.equals("Bonuslar Menusi")) {
+            myTelegramBot.sendMessage("Bonuslar : ", message.getChatId(), ReplyKeyboardUtil.bonusOfOwnerMenu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.BONUS_PRODUCT);
+        } else if (text.equals("Parolni o`zgartirish")) {
+            myTelegramBot.sendMessage("Eski parolni kiriting : ", message.getChatId(), ReplyKeyboardUtil.back());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.RESTART_PASSWORD);
         } else if (text.equals("Exit")) {
             myTelegramBot.sendMessage(chatId, "Bizning Telegram botimizdan foydalangiz uchun raxmat!");
         }
@@ -119,7 +131,7 @@ public class AdminController {
                 myTelegramBot.sendMessage("Pasdagi tugma orqali ro`yxatni yuklab oling.", id, ReplyKeyboardUtil.getProduct());
                 UserMap.saveAdminStep(message.getChatId(), AdminStep.GET_PRODUCT);
             }
-            case "Asosiy Menuga qaytish" -> {
+            case "Orqaga qaytish" -> {
                 myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
                 UserMap.saveAdminStep(id, AdminStep.MENU);
             }
@@ -136,7 +148,7 @@ public class AdminController {
                 myTelegramBot.sendMessage("Sotuvchilar", id, ReplyKeyboardUtil.back());
                 UserMap.saveAdminStep(message.getChatId(), AdminStep.ADD_SELLER);
             }
-            case "Delete Seller" -> {
+            case "Sotuvchini o`chirish" -> {
                 myTelegramBot.sendMessage("Sotuvchining Telefon raqamini kiriting", id, ReplyKeyboardUtil.back());
                 UserMap.saveAdminStep(message.getChatId(), AdminStep.DELETE_SELLER);
             }
@@ -144,7 +156,7 @@ public class AdminController {
                     myTelegramBot.sendMessage(id, "Eng kam bonus yiqqan Sotuvchilarning ro`yxati.");
             case "Aktiv Sotuvchilar (most bonus %)" ->
                     myTelegramBot.sendMessage(id, "Eng ko`p bonus yiqqan Sotuvchilarning ro`yxati.");
-            case "Asosiy Menuga qaytish" -> {
+            case "Orqaga qaytish" -> {
                 myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
                 UserMap.saveAdminStep(id, AdminStep.MENU);
             }
@@ -178,7 +190,7 @@ public class AdminController {
     }
 
     public void addProduct(Message message) {
-        if (message.getText() != null && message.getText().equals("Back")) {
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
         } else {
@@ -233,30 +245,20 @@ public class AdminController {
     }
 
     public void editProduct(Message message) {
-        if (message.getText() != null && message.getText().equals("Back")) {
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
         } else if (UserMap.getProductStep(message.getChatId()) != null) {
-            if (goodsController.check(message.getText())) {
-                switch (UserMap.getProductStep(message.getChatId())) {
-                    case START -> goodsController.start(message);
-                    case NAME -> goodsController.name(message);
-                    case PRICE -> goodsController.price(message);
-                    case BONUS -> goodsController.bonus(message);
-                    case ALL -> goodsController.all(message);
-
-                }
-            } else {
-                myTelegramBot.sendMessage(message.getChatId(), "Bu S/R Malumotlar bazasida yoq");
-                myTelegramBot.sendMessage("Maxsulotning S/R ni kiriting.", message.getChatId(), ReplyKeyboardUtil.back());
-
+            switch (UserMap.getProductStep(message.getChatId())) {
+                case START -> goodsController.start(message);
+                case ALL -> goodsController.all(message);
             }
 
         }
     }
 
     public void deleteProduct(Message message) {
-        if (message.getText() != null && message.getText().equals("Back")) {
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
         } else {
@@ -278,7 +280,7 @@ public class AdminController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else if (message.getText() != null && message.getText().equals("Back")) {
+        } else if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Mahsulotlar menusi", message.getChatId(), ReplyKeyboardUtil.showGoodsMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.GOODS_MENU);
         }
@@ -286,14 +288,14 @@ public class AdminController {
     }
 
     public void add(Message message) {
-        if (message.getText() != null && message.getText().equals("Back")) {
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Sotuvchilar Menusi:", message.getChatId(), ReplyKeyboardUtil.showSellerMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.SELLERS_MENU);
         }
     }
 
     public void deleteSeller(Message message) {
-        if (message.getText() != null && message.getText().equals("Back")) {
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
             myTelegramBot.sendMessage("Sotuvchilar Menusi:", message.getChatId(), ReplyKeyboardUtil.showSellerMenu());
             UserMap.saveAdminStep(message.getChatId(), AdminStep.SELLERS_MENU);
         } else if (sellerService.getSeller(message.getText())) {
@@ -304,6 +306,96 @@ public class AdminController {
             myTelegramBot.sendMessage(message.getChatId(), "Bunday raqamli foydalanuuvchi yoq!!");
             myTelegramBot.sendMessage("Sotuvchining Telefon raqamini kiriting", message.getChatId(), ReplyKeyboardUtil.back());
 
+        }
+    }
+
+    public void bonusProduct(Message message) {
+        String text = message.getText();
+        Long id = message.getChatId();
+        switch (text) {
+            case "Bonus qo`shish" -> {
+                myTelegramBot.sendMessage("Mahsulotning modelini kiriting : ", id, ReplyKeyboardUtil.back());
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.ADD_BONUS);
+            }
+            case "Bonusni o`zgartirish" -> {
+                myTelegramBot.sendMessage("Mahsulotning modelini kiriting : ", id, ReplyKeyboardUtil.back());
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.ADD_BONUS);
+            }
+            case "Bonusni o`chirish" -> {
+                myTelegramBot.sendMessage("Mahsulotning modelini kiriting : ", id, ReplyKeyboardUtil.back());
+                UserMap.saveAdminStep(message.getChatId(), AdminStep.DELETE_BONUS);
+            }
+            case "Orqaga qaytish" -> {
+                myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
+                UserMap.saveAdminStep(id, AdminStep.MENU);
+            }
+        }
+
+
+    }
+
+    public void restartPassword(Message message) {
+        UserEntity userEntity = userRepository.findByChatId(message.getChatId());
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
+            myTelegramBot.sendMessage("Asosiy sahifaga Hush kelibsiz", message.getChatId(), ReplyKeyboardUtil.menu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.MENU);
+        } else if (message.getText().equals(userEntity.getPassword())) {
+            UserMap.checkpasword.put(message.getChatId(), true);
+            myTelegramBot.sendMessage(message.getChatId(), "Yangi parolni kiriting ; ");
+        } else if (UserMap.checkpasword.get(message.getChatId()) == null || !UserMap.checkpasword.get(message.getChatId())) {
+            UserMap.checkpasword.put(message.getChatId(), false);
+            myTelegramBot.sendMessage(message.getChatId(), "Eski parol hato kiritildi : ");
+            myTelegramBot.sendMessage("Eski parolni kiriting : ", message.getChatId(), ReplyKeyboardUtil.back());
+        } else if (UserMap.checkpasword.get(message.getChatId())) {
+            userEntity.setPassword(message.getText());
+            userRepository.save(userEntity);
+            myTelegramBot.sendMessage("Parol muaffaqiyatli ozgartirildi", message.getChatId(), ReplyKeyboardUtil.back());
+            UserMap.checkpasword.put(message.getChatId(), false);
+            DeleteMessage deleteMessage = new DeleteMessage();
+            deleteMessage.setMessageId(message.getMessageId());
+            deleteMessage.setChatId(message.getChatId());
+            myTelegramBot.sendMessage(deleteMessage);
+        }
+    }
+
+    public void addBonus(Message message) {
+        String text = message.getText();
+        List<ModelEntity> list = modelRepository.findAllByModel(text);
+
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
+            myTelegramBot.sendMessage("Bonuslar : ", message.getChatId(), ReplyKeyboardUtil.bonusOfOwnerMenu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.BONUS_PRODUCT);
+        } else if (UserMap.getBonus(message.getChatId()) != null) {
+            switch (UserMap.getBonus(message.getChatId())) {
+                case ADD_BONUS -> goodsController.startBonus(message);
+                case ADD_PRICE -> goodsController.price(message);
+            }
+        } else if (!list.isEmpty()) {
+            for (ModelEntity model : list) {
+                UserMap.bonus.add(model.getId());
+            }
+            myTelegramBot.sendMessage(message.getChatId(), "Bonusni kiriting : ");
+            UserMap.saveBonusStep(message.getChatId(), Bonus.ADD_BONUS);
+        } else if ((UserMap.getBonus(message.getChatId()) == null && list.isEmpty())) {
+            myTelegramBot.sendMessage(message.getChatId(), "Bunday model bazada yoq ");
+            myTelegramBot.sendMessage("Mahsulotning modelini kiriting : ", message.getChatId(), ReplyKeyboardUtil.back());
+        }
+    }
+
+    public void deleteBonus(Message message) {
+        String text = message.getText();
+        List<ModelEntity> list = modelRepository.findAllByModel(text);
+        if (message.getText() != null && message.getText().equals("Orqaga qaytish")) {
+            myTelegramBot.sendMessage("Bonuslar : ", message.getChatId(), ReplyKeyboardUtil.bonusOfOwnerMenu());
+            UserMap.saveAdminStep(message.getChatId(), AdminStep.BONUS_PRODUCT);
+        } else if (!list.isEmpty()) {
+            for (ModelEntity model : list) {
+                UserMap.bonus.add(model.getId());
+            }
+            goodsController.deleteBonus(message);
+        } else {
+            myTelegramBot.sendMessage(message.getChatId(), "Bunday model bazada yoq ");
+            myTelegramBot.sendMessage("Mahsulotning modelini kiriting : ", message.getChatId(), ReplyKeyboardUtil.back());
         }
     }
 }

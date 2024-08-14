@@ -104,6 +104,9 @@ public class ReplyKeyboardUtil {
         List<KeyboardRow> keyboardRows = new LinkedList<>();
         keyboardRows.add(row1);
         keyboardRows.add(row2);
+        keyboardRows.add(row3);
+        keyboardRows.add(row4);
+        keyboardRows.add(row5);
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboardRows);
         keyboardMarkup.setResizeKeyboard(true);
@@ -124,7 +127,11 @@ public class ReplyKeyboardUtil {
         KeyboardRow row5 = new KeyboardRow();
         row5.add("Orqaga qaytish");
 
+        keyboard.add(row1);
         keyboard.add(row2);
+        keyboard.add(row3);
+        keyboard.add(row4);
+        keyboard.add(row5);
 
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboard);
@@ -159,7 +166,7 @@ public class ReplyKeyboardUtil {
 
     public static ReplyKeyboardMarkup back() {
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("Back");
+        row1.add("Orqaga qaytish");
         List<KeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(row1);
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
@@ -168,15 +175,38 @@ public class ReplyKeyboardUtil {
         return keyboardMarkup;
     }
 
-
     public static ReplyKeyboardMarkup getProduct() {
         KeyboardRow row1 = new KeyboardRow();
-        row1.add("Back");
+        row1.add("Orqaga qaytish");
         KeyboardRow row2 = new KeyboardRow();
         row2.add("Malumotlarni yuklab olish");
         List<KeyboardRow> keyboard = new ArrayList<>();
         keyboard.add(row2);
         keyboard.add(row1);
+        ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
+        keyboardMarkup.setKeyboard(keyboard);
+        keyboardMarkup.setResizeKeyboard(true);
+        return keyboardMarkup;
+    }
+    public static ReplyKeyboardMarkup bonusOfOwnerMenu() {
+        KeyboardRow row1 = new KeyboardRow();
+        row1.add("Bonus qo`shish");
+
+        KeyboardRow row2 = new KeyboardRow();
+        row2.add("Bonusni o`zgartirish");
+
+        KeyboardRow row3 = new KeyboardRow();
+        row3.add("Bonusni o`chirish");
+
+        KeyboardRow row4 = new KeyboardRow();
+        row4.add("Orqaga qaytish");
+
+        List<KeyboardRow> keyboard = new LinkedList<>();
+        keyboard.add(row1);
+        keyboard.add(row2);
+        keyboard.add(row3);
+        keyboard.add(row4);
+
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setKeyboard(keyboard);
         keyboardMarkup.setResizeKeyboard(true);

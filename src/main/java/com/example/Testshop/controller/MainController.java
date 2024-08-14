@@ -41,6 +41,10 @@ public class MainController {
                 case GET_PRODUCT -> adminController.getProduct(message);
                 case ADD_SELLER -> adminController.add(message);
                 case DELETE_SELLER -> adminController.deleteSeller(message);
+                case BONUS_PRODUCT -> adminController.bonusProduct(message);
+                case RESTART_PASSWORD -> adminController.restartPassword(message);
+                case ADD_BONUS -> adminController.addBonus(message);
+                case DELETE_BONUS -> adminController.deleteBonus(message);
             }
         } else if (UserMap.getCurrentStep(message.getChatId()) != null) {
             switch (UserMap.getCurrentStep(message.getChatId())) {

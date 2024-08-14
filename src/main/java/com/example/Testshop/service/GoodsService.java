@@ -71,5 +71,14 @@ public class GoodsService {
         Optional<ModelEntity> model = modelRepository.findById(modelId);
         return model.get().getModel();
     }
+
+    public ModelEntity getModelEntity(Integer modelId) {
+        Optional<ModelEntity> model = modelRepository.findById(modelId);
+        return model.get();
+    }
+
+    public void saveBonus(ModelEntity entity) {
+        modelRepository.save(entity);
+    }
 }
 
